@@ -52,7 +52,7 @@ public class UploadCVServlet extends HttpServlet {
                     db.save(doc);
                     HashMap<String, Object> obj = db.find(HashMap.class, id);
                     db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
-                    response.sendRedirect("test?id=" + id);
+                    response.sendRedirect("samplequiz.html?id=" + id);
                     /*redirect to quiz*/
                 }
             } else {
