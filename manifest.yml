@@ -1,0 +1,11 @@
+applications:
+- services:
+  - CVPicker-cloudantNoSQLDB
+  - CVPicker-MonitoringAndAnalytics
+  disk_quota: 1024M
+  host: CVPicker
+  name: CVPicker
+  path: JavaCloudantDB.war
+  domain: mybluemix.net
+  instances: 1
+  memory: 512M
