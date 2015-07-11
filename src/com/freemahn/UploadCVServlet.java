@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import javax.swing.*;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class UploadCVServlet extends HttpServlet {
             id = request.getParameter("id");
             result = request.getParameter("result");
             ArrayList<Part> parts = (ArrayList<Part>) request.getParts();
+            response.getWriter().write(id + " " + result);
             if (id == null)
                 id = UUID.randomUUID().toString();
             if (result == null) {
@@ -52,25 +54,47 @@ public class UploadCVServlet extends HttpServlet {
                     db.save(doc);
                     HashMap<String, Object> obj = db.find(HashMap.class, id);
                     db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
-                    response.sendRedirect("samplequiz.html?id=" + id);
-                    /*redirect to quiz*/
+                    response.sendRedirect("/samplequiz.html?id=" + id);
+                    //redirect to quiz
                 }
             } else {
                 //trying to upload Video
+
                 for (int i = 1; i < request.getParts().size(); i++) {
                     Part filePart = parts.get(i); // Retrieves <input type="file" name="file">
+                    response.getWriter().write(filePart.getName());
 
                     String fileName = getFileName(filePart);
                     if (fileName == null || fileName.isEmpty()) continue;
                     //Map<String, Object> doc = new HashMap<String, Object>();
-                    HashMap<String, Object> obj = db.find(HashMap.class, id);
-                    obj.put("_id", id);
-                    obj.put("result", result);
-                    db.update(obj);
+                    HashMap<String, Object> obj = null;
+                    try {
+                        obj = db.find(HashMap.class, id);
+                    } catch (org.lightcouch.NoDocumentException e) {
 
-                    db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
-                    response.sendRedirect("dashboard");
-                    /*redirect to dashboard*/
+                    }
+                    if (obj == null) {
+
+                        obj = new HashMap<String, Object>();
+                        obj.put("_id", id);
+                        obj.put("result", result);
+                        db.save(obj);
+                        obj = db.find(HashMap.class, id);
+                        db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id,  (String) obj.get("_rev"));
+                    } else {
+                        // if existing document
+                        //attach the attachment object
+                        db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
+                        obj = db.find(HashMap.class, id + "");
+                        obj.put("result", result);
+                        db.update(obj);
+                        //response.getWriter().write();
+
+                    }
+
+
+                    //response.sendRedirect("/dashboard");
+
                 }
             }
         } catch (IOException e) {
