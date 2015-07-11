@@ -30,8 +30,9 @@
     	<pathelement location="WebContent/WEB-INF/lib/httpclient-4.3.4.jar"/>  
     	<pathelement location="WebContent/WEB-INF/lib/httpclient-cache-4.3.4.jar"/>  
     	<pathelement location="WebContent/WEB-INF/lib/httpmime-4.3.4.jar"/>  
-    	<pathelement location="WebContent/WEB-INF/lib/httpcore-4.3.2.jar"/> 
-	<fileset dir="dep-jar"> 
+    	<pathelement location="WebContent/WEB-INF/lib/httpcore-4.3.2.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/org.ektorp-1.4.2.jar"/>
+		<fileset dir="dep-jar">
         	<include name="*.jar"/> 
     	</fileset>
     </path>
