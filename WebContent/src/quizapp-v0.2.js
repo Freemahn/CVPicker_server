@@ -59,7 +59,8 @@ quizApp.directive("iscorecard", [ 'QuizService', function( QuizService, $window)
 	return {
 		restrict : 'E',
 		scope : {},
-		controller : function($scope, $window, $http) {
+		controller : function($scope, $window, $http, $location) {
+			var userId = $location.absUrl().split('=').pop();
 			$scope.totalQuestions =  QuizService.totalQuestions;
 			$scope.questionsAttempted =  QuizService.questionsAttempted;
 			$scope.correctAnswers =  QuizService.correctAnswers;
@@ -96,14 +97,17 @@ quizApp.directive("iscorecard", [ 'QuizService', function( QuizService, $window)
 					video.src = "";
                     console.log(url);
                   	blob = $window.recordRTC.getBlob();
+                  	console.log(blob);
 			        fd = new FormData();
-			        fd.append('video', blob);
-			        fd.append('name', 23);
+			        fd.append('file', blob);
+			        fd.append('result', $scope.correctAnswers);
+			        fd.append('id', userId);
 			        $http.post('api/uploadCV', fd, {
 			            transformRequest: angular.identity,
 			            headers: {'Content-Type' : undefined }
 			        })
 			        .success(function() {
+			        	console.log("Successfully sent")
 			       	});
                 });
 			}
