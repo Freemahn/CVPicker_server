@@ -30,7 +30,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import example.nosql.CloudantClientMgr;
 
 
-@Path("/favorites")
+//@Path("/favorites")
 /**
  * CRUD service of todo list table. It uses REST style.
  *
@@ -42,8 +42,8 @@ public class ResourceServlet {
 
     }
 
-    @POST
-    @Path("/attach")
+    /*@POST
+    @Path("/attach")*/
     @Consumes("multipart/form-data")
     public Response create(@FormParam("file") File theFile, @QueryParam("id") Long id, @QueryParam("name") String name, @QueryParam("value") String value, @QueryParam("filename") String fname) throws Exception {
         byte[] bytes = null;

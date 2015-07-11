@@ -14,15 +14,7 @@
         </multipart-config>
     </servlet>
 
-    <servlet>
-        <servlet-name>com.freemahn.UploadVideoServlet</servlet-name>
-        <servlet-class>com.freemahn.UploadVideoServlet</servlet-class>
-        <multipart-config>
-            <max-file-size>104485760</max-file-size>
-            <max-request-size>20971520</max-request-size>
-            <file-size-threshold>5242880</file-size-threshold>
-        </multipart-config>
-    </servlet>
+
 
     <servlet>
         <servlet-name>com.freemahn.TestServlet</servlet-name>
@@ -40,15 +32,14 @@
         <url-pattern>api/uploadCV</url-pattern>
     </servlet-mapping>
 
+
+
+
     <servlet-mapping>
         <servlet-name>com.freemahn.TestServlet</servlet-name>
         <url-pattern>api/test</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>com.freemahn.UploadVideoServlet</servlet-name>
-        <url-pattern>api/uploadVideo</url-pattern>
-    </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file>send.jsp</welcome-file>

@@ -26,39 +26,58 @@ public class UploadCVServlet extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String id = null;
+        String result = null;
         try {
 
             //creates a database with the specified name
             Database db = null;
-            try {
-                db = CloudantClientMgr.getDB();
-            } catch (Exception e) {
-                response.getWriter().print(e.getMessage());
-                return;
+            db = CloudantClientMgr.getDB();
 
-            }
-            /*2 params -name and file*/
-            String name = request.getParameter("name");
+
+            id = request.getParameter("id");
+            result = request.getParameter("result");
             ArrayList<Part> parts = (ArrayList<Part>) request.getParts();
-            for (int i = 1; i < request.getParts().size(); i++) {
-                Part filePart = parts.get(i); // Retrieves <input type="file" name="file">
+            if (id == null)
+                id = UUID.randomUUID().toString();
+            if (result == null) {
+                //trying to upload CV
+                for (int i = 0; i < request.getParts().size(); i++) {
+                    Part filePart = parts.get(i); // Retrieves <input type="file" name="file">
+                    String fileName = getFileName(filePart);
+                    if (fileName == null || fileName.isEmpty()) continue;
+                    Map<String, Object> doc = new HashMap<String, Object>();
+                    doc.put("_id", id);
+                    db.save(doc);
+                    HashMap<String, Object> obj = db.find(HashMap.class, id);
+                    db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
+                }
+            } else {
+                //trying to upload Video
 
-                String fileName = getFileName(filePart);
-                if (fileName == null || fileName.isEmpty()) continue;
-                Map<String, Object> doc = new HashMap<String, Object>();
-                String id = UUID.randomUUID().toString();
-                doc.put("_id", id);
-                doc.put("owner", name);
-                db.save(doc);
-                HashMap<String, Object> obj = db.find(HashMap.class, id);
-                db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
+                for (int i = 1; i < request.getParts().size(); i++) {
+                    Part filePart = parts.get(i); // Retrieves <input type="file" name="file">
 
+                    String fileName = getFileName(filePart);
+                    if (fileName == null || fileName.isEmpty()) continue;
+                    //Map<String, Object> doc = new HashMap<String, Object>();
+                    HashMap<String, Object> obj = db.find(HashMap.class, id);
+                    obj.put("_id", id);
+                    obj.put("result", result);
+                    db.update(obj);
+
+                    db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
+                }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             response.getWriter().println(e.getMessage());
-            return;
+            //  return;
+            throw e;
+        } catch (ServletException e) {
+            throw e;
         }
-        response.sendRedirect("test?" + request.getParameter("name"));
+        response.sendRedirect("test?id=" + id);
     }
 
     private static String getFileName(Part part) {

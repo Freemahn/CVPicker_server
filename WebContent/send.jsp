@@ -9,9 +9,6 @@
 
 <form action="api/uploadCV" method="post" enctype="multipart/form-data">
 
-    <input type="text" placeholder="name" name="name"/>
-    <br/>
-
     <div>
         <input type="file" name="file">
     </div>
