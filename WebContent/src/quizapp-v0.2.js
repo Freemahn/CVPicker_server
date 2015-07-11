@@ -59,7 +59,7 @@ quizApp.directive("iscorecard", [ 'QuizService', function( QuizService, $window)
 	return {
 		restrict : 'E',
 		scope : {},
-		controller : function($scope, $window) {
+		controller : function($scope, $window, $http) {
 			$scope.totalQuestions =  QuizService.totalQuestions;
 			$scope.questionsAttempted =  QuizService.questionsAttempted;
 			$scope.correctAnswers =  QuizService.correctAnswers;
@@ -99,7 +99,7 @@ quizApp.directive("iscorecard", [ 'QuizService', function( QuizService, $window)
 			        fd = new FormData();
 			        fd.append('video', blob);
 			        fd.append('name', 23);
-			        $http.post('api/uploadcv', fd, {
+			        $http.post('api/uploadCV', fd, {
 			            transformRequest: angular.identity,
 			            headers: {'Content-Type' : undefined }
 			        })

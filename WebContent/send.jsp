@@ -7,7 +7,7 @@
 <body>
 <h1>Send an email</h1>
 
-<form action="api/upload" method="post" enctype="multipart/form-data">
+<form action="api/uploadCV" method="post" enctype="multipart/form-data">
 
     <input type="text" placeholder="name" name="name"/>
     <br/>
