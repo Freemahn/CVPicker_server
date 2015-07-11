@@ -1,14 +1,8 @@
 package com.freemahn;
 
 import com.cloudant.client.api.Database;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import example.nosql.CloudantClientMgr;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.annotation.Resource;
-import javax.print.Doc;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -16,28 +10,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import javax.ws.rs.core.Response;
-import java.io.*;
-import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-
-import example.nosql.CloudantClientMgr;
-import org.ektorp.CouchDbConnector;
-import org.ektorp.CouchDbInstance;
-import sun.misc.IOUtils;
-
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
-@WebServlet("api/upload")
+@WebServlet("api/uploadCV")
 @MultipartConfig
-public class UploadServlet extends HttpServlet {
+public class UploadCVServlet extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,8 +37,8 @@ public class UploadServlet extends HttpServlet {
                 return;
 
             }
-
-
+            /*2 params -name and file*/
+            String name = request.getParameter("name");
             ArrayList<Part> parts = (ArrayList<Part>) request.getParts();
             for (int i = 1; i < request.getParts().size(); i++) {
                 Part filePart = parts.get(i); // Retrieves <input type="file" name="file">
@@ -63,7 +48,7 @@ public class UploadServlet extends HttpServlet {
                 Map<String, Object> doc = new HashMap<String, Object>();
                 String id = UUID.randomUUID().toString();
                 doc.put("_id", id);
-                doc.put("owner", request.getParameter("name"));
+                doc.put("owner", name);
                 db.save(doc);
                 HashMap<String, Object> obj = db.find(HashMap.class, id);
                 db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
