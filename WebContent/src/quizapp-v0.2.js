@@ -98,8 +98,8 @@ quizApp.directive("iscorecard", [ 'QuizService', function( QuizService, $window)
                   	blob = $window.recordRTC.getBlob();
 			        fd = new FormData();
 			        fd.append('video', blob);
-			        fd.append('id', 23);
-			        $http.post('api/favorites', fd, {
+			        fd.append('name', 23);
+			        $http.post('api/uploadcv', fd, {
 			            transformRequest: angular.identity,
 			            headers: {'Content-Type' : undefined }
 			        })
