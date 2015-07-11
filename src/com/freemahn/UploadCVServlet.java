@@ -52,10 +52,11 @@ public class UploadCVServlet extends HttpServlet {
                     db.save(doc);
                     HashMap<String, Object> obj = db.find(HashMap.class, id);
                     db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
+                    response.sendRedirect("test?id=" + id);
+                    /*redirect to quiz*/
                 }
             } else {
                 //trying to upload Video
-
                 for (int i = 1; i < request.getParts().size(); i++) {
                     Part filePart = parts.get(i); // Retrieves <input type="file" name="file">
 
@@ -68,6 +69,8 @@ public class UploadCVServlet extends HttpServlet {
                     db.update(obj);
 
                     db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
+                    response.sendRedirect("dashboard");
+                    /*redirect to dashboard*/
                 }
             }
         } catch (IOException e) {
@@ -77,7 +80,7 @@ public class UploadCVServlet extends HttpServlet {
         } catch (ServletException e) {
             throw e;
         }
-        response.sendRedirect("test?id=" + id);
+
     }
 
     private static String getFileName(Part part) {
