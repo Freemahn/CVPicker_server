@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,82 +20,74 @@ import java.util.List;
  * Created by freeemahn on 11.07.15.
  */
 public class DashboardServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Database db = CloudantClientMgr.getDB();
-        JsonArray jsonArray = new JsonArray();
+        List<User> list = new ArrayList<User>();
         String id = req.getParameter("id");
         List<HashMap> allUsers = db.view("_all_docs").query(HashMap.class);
         if (id == null)
-            for (HashMap user : allUsers) {
-                HashMap<String, Object> obj = db.find(HashMap.class, user.get("id") + "");
-                JsonObject jsonObject = new JsonObject();
-                LinkedTreeMap<String, Object> attachments = (LinkedTreeMap<String, Object>) obj.get("_attachments");
-                jsonObject.addProperty("id", obj.get("_id") + "");
-                jsonObject.addProperty("result", obj.get("result") + "");
-                if (attachments != null && attachments.size() > 0) {
-                    JsonArray attachmentList = null;
-                    try {
-                        attachmentList = getAttachmentList(attachments, user.get("id") + "");
+            for (HashMap mapUser : allUsers) {
 
-                    } catch (Exception e) {
-                        throw new ServletException(e);
+                try {
+                    HashMap<String, Object> obj = db.find(HashMap.class, mapUser.get("id") + "");
+                    LinkedTreeMap<String, Object> attachments = (LinkedTreeMap<String, Object>) obj.get("_attachments");
+                    User user = new User();
+                    user.id = obj.get("_id") + "";
+                    user.result = Integer.parseInt(obj.get("result") + "");
+                    if (attachments != null && attachments.size() > 0) {
+                        user.attachments = getAttachmentList(attachments, mapUser.get("id") + "");
                     }
 
-                    jsonObject.add("attachments", attachmentList);
-
+                    list.add(user);
+                } catch (Exception e) {
+                    throw new ServletException("get From db exception" + e);
                 }
 
-                jsonArray.add(jsonObject);
             }
         else {
-            HashMap<String, Object> obj = db.find(HashMap.class, id);
-            JsonObject jsonObject = new JsonObject();
+
+            HashMap<String, Object> obj = db.find(HashMap.class, id + "");
             LinkedTreeMap<String, Object> attachments = (LinkedTreeMap<String, Object>) obj.get("_attachments");
-            jsonObject.addProperty("id", obj.get("_id") + "");
-            jsonObject.addProperty("result", obj.get("result") + "");
+            User user = new User();
+            user.id = obj.get("_id") + "";
+            user.result = Integer.parseInt(obj.get("result") + "");
             if (attachments != null && attachments.size() > 0) {
-                JsonArray attachmentList = null;
-                try {
-                    attachmentList = getAttachmentList(attachments, id);
-                } catch (Exception e) {
-                    throw new ServletException(e);
-                }
-
-                jsonObject.add("attachments", attachmentList);
-
+                user.attachments = getAttachmentList(attachments, id + "");
             }
 
-            jsonArray.add(jsonObject);
+            list.add(user);
         }
-        for (JsonElement obj : jsonArray) {
-            resp.getWriter().write(obj.toString() + "\n");
-        }
+
+
+        req.setAttribute("users", list);
+        req.getRequestDispatcher("/dashboard.jsp").forward(req, resp);
     }
 
 
-    private JsonArray getAttachmentList(LinkedTreeMap<String, Object> attachmentList, String docID) throws Exception {
+    private ArrayList<Attachment> getAttachmentList(LinkedTreeMap<String, Object> attachmentList, String
+            docID) throws ServletException {
 
-        JsonArray attachmentArray = new JsonArray();
-        String URLTemplate = "http://" + CloudantClientMgr.getUser() + ":" + CloudantClientMgr.getPassword() + "@" + CloudantClientMgr.getHost() + "/" + CloudantClientMgr.getDatabaseName() + "/";
+        ArrayList<Attachment> list = new ArrayList<Attachment>();
+        try {
+            String URLTemplate = "http://" + CloudantClientMgr.getUser() + ":" + CloudantClientMgr.getPassword() + "@" + CloudantClientMgr.getHost() + "/" + CloudantClientMgr.getDatabaseName() + "/";
 
-        for (Object key : attachmentList.keySet()) {
-            LinkedTreeMap<String, Object> attach = (LinkedTreeMap<String, Object>) attachmentList.get(key);
+            for (Object key : attachmentList.keySet()) {
+                LinkedTreeMap<String, Object> attach = (LinkedTreeMap<String, Object>) attachmentList.get(key);
+                Attachment attachment = new Attachment();
 
-            JsonObject attachedObject = new JsonObject();
-            //set the content type of the attachment
-            attachedObject.addProperty("content_type", attach.get("content_type").toString());
-            //append the document id and attachment key to the URL
-            attachedObject.addProperty("url", URLTemplate + docID + "/" + key);
-            //set the key of the attachment
-            attachedObject.addProperty("key", key + "");
-
-            //add the attachment object to the array
-            attachmentArray.add(attachedObject);
+                //append the document id and attachment key to the URL
+                attachment.url = URLTemplate + docID + "/" + key;
+                //set the key of the attachment
+                attachment.key = key + "";
+                list.add(attachment);
+            }
+        } catch (Exception e) {
+            throw new ServletException("GetAttachmentEx " + e);
         }
-
-        return attachmentArray;
+        return list;
 
     }
 }

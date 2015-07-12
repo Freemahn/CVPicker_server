@@ -92,9 +92,6 @@ public class UploadCVServlet extends HttpServlet {
 
                     }
 
-
-                    //response.sendRedirect("/dashboard");
-
                 }
             }
         } catch (IOException e) {
