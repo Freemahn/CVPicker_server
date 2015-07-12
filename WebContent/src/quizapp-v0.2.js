@@ -113,7 +113,7 @@ quizApp.directive("iscorecard", ['QuizService', function (QuizService, $window) 
                         .success(function (data) {
                             console.log("Successfully sent");
                             console.log(data);
-                            $location.path('/final.html');
+                            $location.path('final.html');
                         });
                 });
             }

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Attaching CVs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+       <link href="jasny/css/jasny-bootstrap.min.css" rel="stylesheet" media="screen">
+       <style>
+		.parent {
+		    width: 100%;
+		    height: 100%;
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    overflow: auto;
+		}
+
+		.block {
+		    width: 500px;
+		    height: 500px;
+		    position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    margin: -250px 0 0 -250px;
+		    
+		    img {
+		        max-width: 100%;
+		        height: auto;
+		        display: block;
+		        margin: 0 auto;
+		        border: none;
+		    }
+		}
+       </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  	<div class="parent">
+	    <div class="block">
+			<h1>Please, attach your CV.</h1>
+			<form action="api/uploadCV" method="post" enctype="multipart/form-data">
+				<div class="fileinput fileinput-new input-group" data-provides="fileinput">
+			  		<div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+			  		<span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="file"></span>
+			  		<a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+			  	</div>
+			  	<input type="submit" class="btn btn-primary" value="Send"/>    
+			</form>
+	    </div>
+	</div>
+  	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="jasny/js/jasny-bootstrap.min.js"></script>
+  </body>
+</html>
