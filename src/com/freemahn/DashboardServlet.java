@@ -38,7 +38,9 @@ public class DashboardServlet extends HttpServlet {
                 JsonObject jsonObject = new JsonObject();
                 LinkedTreeMap<String, Object> attachments = (LinkedTreeMap<String, Object>) obj.get("_attachments");
                 jsonObject.addProperty("id", obj.get("_id") + "");
+
                 jsonObject.addProperty("result", obj.get("result") + "");
+                jsonObject.addProperty("email", obj.get("email") + "");
                 if (attachments != null && attachments.size() > 0) {
                     JsonArray attachmentList = null;
                     try {
@@ -60,6 +62,7 @@ public class DashboardServlet extends HttpServlet {
             LinkedTreeMap<String, Object> attachments = (LinkedTreeMap<String, Object>) obj.get("_attachments");
             jsonObject.addProperty("id", obj.get("_id") + "");
             jsonObject.addProperty("result", obj.get("result") + "");
+            jsonObject.addProperty("email", obj.get("email") + "");
             if (attachments != null && attachments.size() > 0) {
                 JsonArray attachmentList = null;
                 try {
