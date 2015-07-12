@@ -26,7 +26,10 @@ public class DeclineServlet extends HttpServlet {
 
         //check if document exist
         HashMap<String, Object> obj = db.find(HashMap.class, id + "");
-
+        String email = obj.get("email").toString();
+        String subj = "CVPicker - Status";
+        String html = "Your CV has been declined. Try better next time!";
+        AcceptServlet.sendMessage(id, email, subj, html);
         if (obj == null)
             recordFound = false;
         else
