@@ -113,9 +113,20 @@ quizApp.directive("iscorecard", ['QuizService', function (QuizService, $window) 
                         .success(function (data) {
                             console.log("Successfully sent");
                             console.log(data);
+                            $location.path('/final.html');
                         });
                 });
             }
+
+            document.addEventListener("visibilitychange", function() {
+                    if (document.hidden) {
+                        console.log("HIDDEN");
+                        $scope.correctAnswers = 0;
+                        $scope.showScores();
+                    } else {
+                        console.log("not hidden");
+                      }
+                    }, false);
 
         },
         link: function (scope, element, attrs) {
