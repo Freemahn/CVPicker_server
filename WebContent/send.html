@@ -48,8 +48,9 @@
         <h1>Please, attach your CV.</h1>
 
         <form action="api/uploadCV" method="post" enctype="multipart/form-data">
-            <input type="text" placeholder="email" name="email"/>
-            <br>
+            <div class="form-group">
+                <input type="text" class="form-control" name="email" placeholder="Email">
+            </div>
             <div class="fileinput fileinput-new input-group" data-provides="fileinput">
                 <div class="form-control" data-trigger="fileinput"><i
                         class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span>
