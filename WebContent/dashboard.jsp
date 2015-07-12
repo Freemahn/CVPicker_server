@@ -20,7 +20,7 @@
 <table border="2">
     <caption>USERS</caption>
     <tr>
-        <th>Id</th>
+        <th>Email</th>
         <th>Test result</th>
         <th>CV</th>
         <th>Video</th>
@@ -28,9 +28,8 @@
 
     <% for (User user : users) {%>
     <tr>
-        <td><%out.print(user.getId());%></td>
+        <td><%out.print(user.getEmail());%></td>
         <td><%out.print(user.getResult());%></td>
-
         <td><a href=<% out.print(user.getAttachments().get(0).getUrl());%>><%
             out.print(user.getAttachments().get(0).getKey());%></a></td>
         <td><a href=<% out.print(user.getAttachments().get(1).getUrl());%>><%

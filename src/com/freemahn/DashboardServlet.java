@@ -32,11 +32,12 @@ public class DashboardServlet extends HttpServlet {
             for (HashMap mapUser : allUsers) {
 
                 try {
-                    HashMap<String, Object> obj = db.find(HashMap.class, mapUser.get("id") + "");
-                    LinkedTreeMap<String, Object> attachments = (LinkedTreeMap<String, Object>) obj.get("_attachments");
+                    HashMap<String, Object> mapUser2 = db.find(HashMap.class, mapUser.get("id") + "");
+                    LinkedTreeMap<String, Object> attachments = (LinkedTreeMap<String, Object>) mapUser2.get("_attachments");
                     User user = new User();
-                    user.id = obj.get("_id") + "";
-                    user.result = Integer.parseInt(obj.get("result") + "");
+                    user.id = mapUser2.get("_id") + "";
+                    user.email = mapUser2.get("email") + "";
+                    user.result = Integer.parseInt(mapUser2.get("result") + "");
                     if (attachments != null && attachments.size() > 0) {
                         user.attachments = getAttachmentList(attachments, mapUser.get("id") + "");
                     }
@@ -53,7 +54,9 @@ public class DashboardServlet extends HttpServlet {
             LinkedTreeMap<String, Object> attachments = (LinkedTreeMap<String, Object>) obj.get("_attachments");
             User user = new User();
             user.id = obj.get("_id") + "";
+            user.email = obj.get("email") + "";
             user.result = Integer.parseInt(obj.get("result") + "");
+
             if (attachments != null && attachments.size() > 0) {
                 user.attachments = getAttachmentList(attachments, id + "");
             }

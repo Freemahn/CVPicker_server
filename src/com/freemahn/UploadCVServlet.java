@@ -30,6 +30,7 @@ public class UploadCVServlet extends HttpServlet {
 
         String id = null;
         String result = null;
+        String email = null;
         try {
 
             //creates a database with the specified name
@@ -39,18 +40,20 @@ public class UploadCVServlet extends HttpServlet {
 
             id = request.getParameter("id");
             result = request.getParameter("result");
+            email = request.getParameter("email");
             ArrayList<Part> parts = (ArrayList<Part>) request.getParts();
             response.getWriter().write(id + " " + result);
             if (id == null)
                 id = UUID.randomUUID().toString();
             if (result == null) {
                 //trying to upload CV
-                for (int i = 0; i < request.getParts().size(); i++) {
+                for (int i = 1; i < request.getParts().size(); i++) {
                     Part filePart = parts.get(i); // Retrieves <input type="file" name="file">
                     String fileName = getFileName(filePart);
                     if (fileName == null || fileName.isEmpty()) continue;
                     Map<String, Object> doc = new HashMap<String, Object>();
                     doc.put("_id", id);
+                    doc.put("email", email);
                     db.save(doc);
                     HashMap<String, Object> obj = db.find(HashMap.class, id);
                     db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
@@ -68,11 +71,7 @@ public class UploadCVServlet extends HttpServlet {
                     if (fileName == null || fileName.isEmpty()) continue;
                     //Map<String, Object> doc = new HashMap<String, Object>();
                     HashMap<String, Object> obj = null;
-                    try {
-                        obj = db.find(HashMap.class, id);
-                    } catch (org.lightcouch.NoDocumentException e) {
-
-                    }
+                    obj = db.find(HashMap.class, id);
                     if (obj == null) {
 
                         obj = new HashMap<String, Object>();
@@ -80,7 +79,7 @@ public class UploadCVServlet extends HttpServlet {
                         obj.put("result", result);
                         db.save(obj);
                         obj = db.find(HashMap.class, id);
-                        db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id,  (String) obj.get("_rev"));
+                        db.saveAttachment(filePart.getInputStream(), fileName, filePart.getContentType(), id, (String) obj.get("_rev"));
                     } else {
                         // if existing document
                         //attach the attachment object
@@ -114,24 +113,5 @@ public class UploadCVServlet extends HttpServlet {
         return null;
     }
 
-    public byte[] readContent(Part filePart) throws IOException {
-        ByteArrayOutputStream out = null;
-        InputStream input = null;
-        try {
-            out = new ByteArrayOutputStream();
-            input = new BufferedInputStream(filePart.getInputStream());
-            int data = 0;
-            while ((data = input.read()) != -1) {
-                out.write(data);
-            }
-        } finally {
-            if (null != input) {
-                input.close();
-            }
-            if (null != out) {
-                out.close();
-            }
-        }
-        return out.toByteArray();
-    }
+
 }

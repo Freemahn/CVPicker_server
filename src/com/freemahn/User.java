@@ -8,6 +8,16 @@ import java.util.ArrayList;
 public class User {
     String id;
     Integer result;
+    String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     ArrayList<Attachment> attachments;
 
     public String getId() {
