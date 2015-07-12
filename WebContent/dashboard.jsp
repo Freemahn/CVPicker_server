@@ -42,8 +42,8 @@
               <td><a href=<% out.print(user.getAttachments().get(1).getUrl());%>><%
                   out.print(user.getAttachments().get(1).getKey());%></a></td>
               <td>
-                <a href=<%out.print("/accept?id="+user.getId());%> class="btn btn-success" role="button">Accept</a>
-                <a href=<%out.print("/decline?id="+user.getId());%> class="btn btn-danger" role="button">Decline</a>
+                <a href=<%out.print("/api/accept?id="+user.getId());%> class="btn btn-success" role="button">Accept</a>
+                <a href=<%out.print("/api/decline?id="+user.getId());%> class="btn btn-danger" role="button">Decline</a>
               </td>
           </tr>
             <%} %>
